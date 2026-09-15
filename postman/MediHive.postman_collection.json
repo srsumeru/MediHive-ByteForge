@@ -1,0 +1,237 @@
+{
+  "info": {
+    "name": "MediHive API",
+    "description": "ByteForge demo. Log in via browser first; send JSESSIONID and XSRF-TOKEN cookies and X-XSRF-TOKEN header for writes. IDs may vary; inspect responses.\nV3: Hospitals retain their safety floor plus 50 extra units. Pending critical proposals may overlap, but approved commitments cannot exceed the request. Offer limits exclude approved reservations.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "csrfToken",
+      "value": "copy-XSRF-TOKEN-cookie"
+    },
+    {
+      "key": "requestId",
+      "value": "1"
+    },
+    {
+      "key": "sourceId",
+      "value": "3"
+    }
+  ],
+  "item": [
+    {
+      "name": "Current role",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/me"
+      }
+    },
+    {
+      "name": "Facilities",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/facilities"
+      }
+    },
+    {
+      "name": "Medicines",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/medicines"
+      }
+    },
+    {
+      "name": "Dashboard",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/dashboard/2"
+      }
+    },
+    {
+      "name": "Inventory",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/inventory?facilityId=2"
+      }
+    },
+    {
+      "name": "All visible requests",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/requests?facilityId=2"
+      }
+    },
+    {
+      "name": "Safe source suggestions",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/suggestions?requesterId=2&medicineId=5"
+      }
+    },
+    {
+      "name": "Create critical request",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/requests",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"requesterId\": 2,\n  \"medicineId\": 5,\n  \"quantity\": 100,\n  \"priority\": \"CRITICAL\",\n  \"notes\": \"Fictional demo\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Offer source stock",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/requests/1/offers",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sourceId\": 3,\n  \"quantity\": 25\n}"
+        }
+      }
+    },
+    {
+      "name": "Approve exact amount",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/allocations/1/approve",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quantity\": 25\n}"
+        }
+      }
+    },
+    {
+      "name": "Reject offer",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/allocations/1/reject",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{csrfToken}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Dispatch approved",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/allocations/1/dispatch",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{csrfToken}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Confirm delivery",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/allocations/1/deliver",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{csrfToken}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Cancel own request",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/requests/1/cancel",
+        "header": [
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{csrfToken}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Update stock",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/api/inventory/1",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-XSRF-TOKEN",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quantity\": 5000,\n  \"dailyConsumption\": 10,\n  \"reorderLevel\": 350,\n  \"expiryDate\": \"2028-01-01\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Critical offer limits - own facility only",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/requests/{{requestId}}/offer-options?sourceId={{sourceId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "requests",
+            "{{requestId}}",
+            "offer-options"
+          ],
+          "query": [
+            {
+              "key": "sourceId",
+              "value": "{{sourceId}}"
+            }
+          ]
+        },
+        "description": "Use the signed-in administrator's own source ID. Returns the current maximum offer, safety floor, hospital extra reserve and approved reservations."
+      }
+    }
+  ]
+}
