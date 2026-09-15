@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MediHive medicine shortage early warning prototype by ByteForge">
+    <title>MediHive | Medicine Supply Intelligence</title>
+    <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+<div class="background-orb orb-one"></div><div class="background-orb orb-two"></div>
+<header class="topbar">
+    <a class="brand" href="#top" aria-label="MediHive home">
+        <span class="brand-mark">M</span>
+        <span><strong>MediHive</strong><small>Medicine Supply Intelligence</small></span>
+    </a>
+    <div class="facility-picker"><span id="roleLabel" class="role-label"></span><button id="logoutButton" class="secondary" type="button">Log out</button>
+        <label for="facilitySelect">Viewing facility</label>
+        <select id="facilitySelect" aria-label="Select a facility"></select>
+    </div>
+</header>
+
+<main id="top">
+    <section class="hero">
+        <div>
+            <p class="eyebrow">EARLY WARNING FOR ESSENTIAL MEDICINES</p>
+            <h1>See a shortage before an empty shelf becomes a crisis.</h1>
+            <p class="hero-copy">MediHive connects warehouses, pharmacies, and hospitals through one shared view of stock, demand, expiry, and supply requests.</p>
+            <div class="hero-actions">
+                <button class="primary" id="newRequestButton">Create supply request</button>
+                <button class="secondary" id="refreshButton">Refresh dashboard</button>
+            </div>
+        </div>
+        <div class="network-visual" aria-label="Medicine supply network illustration">
+            <div class="node warehouse"><span>WH</span><b>Warehouse</b><small>Available supply</small></div>
+            <div class="pulse-line line-one"></div><div class="pulse-line line-two"></div>
+            <div class="node hospital"><span>H</span><b>Hospital</b><small>Critical demand</small></div>
+            <div class="node pharmacy"><span>P</span><b>Pharmacy</b><small>Community demand</small></div>
+            <div class="radar-ring"></div>
+        </div>
+    </section>
+
+    <section class="section dashboard-section">
+        <div class="section-heading">
+            <div><p class="eyebrow">LIVE OVERVIEW</p><h2 id="dashboardTitle">Facility dashboard</h2></div>
+            <span class="live-indicator"><i></i> Demo data active</span>
+        </div>
+        <div class="metrics">
+            <article><span>Tracked medicines</span><strong id="trackedCount">0</strong><small>Active inventory records</small></article>
+            <article class="danger-metric"><span>Critical alerts</span><strong id="criticalCount">0</strong><small>Immediate attention</small></article>
+            <article class="warning-metric"><span>Expiring soon</span><strong id="expiryCount">0</strong><small>Within 60 days</small></article>
+            <article><span>Open requests</span><strong id="requestCount">0</strong><small>Awaiting completion</small></article>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-heading">
+            <div><p class="eyebrow">RISK MONITOR</p><h2>Medicine inventory</h2></div>
+            <div class="legend"><span><i class="dot healthy"></i>Healthy</span><span><i class="dot watch"></i>High</span><span><i class="dot critical"></i>Critical</span></div>
+        </div>
+        <p id="inventoryAccessNote" class="inventory-access-note"></p>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Medicine</th><th>Available</th><th>Daily use</th><th>Days left</th><th>Expiry</th><th>Risk</th><th>Recommended action</th><th id="inventoryManageHeader">Manage</th></tr></thead>
+                <tbody id="inventoryBody"><tr><td colspan="8" class="loading">Loading inventory...</td></tr></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="section split-section">
+        <div>
+            <div class="section-heading"><div><p class="eyebrow">SUPPLY MOVEMENT</p><h2>Recent requests</h2></div></div>
+            <div id="requestList" class="request-list"><p class="empty-state">Loading requests...</p></div>
+        </div>
+        <aside class="how-it-works">
+            <p class="eyebrow">HOW IT WORKS</p><h2>From signal to delivery</h2>
+            <ol>
+                <li><span>1</span><div><b>Detect</b><small>Stock and consumption reveal the risk.</small></div></li>
+                <li><span>2</span><div><b>Match</b><small>Available sources keep their own safety reserve.</small></div></li>
+                <li><span>3</span><div><b>Move</b><small>The request progresses to delivery.</small></div></li>
+                <li><span>4</span><div><b>Learn</b><small>Updated inventory improves the next alert.</small></div></li>
+            </ol>
+        </aside>
+    </section>
+
+    <section class="section" id="dispatchFeedSection" hidden>
+        <div class="section-heading"><div><p class="eyebrow">NETWORK TRANSFERS</p><h2>Dispatches across all facilities</h2></div></div>
+        <div id="dispatchFeed" class="request-list" aria-live="polite"></div>
+    </section>
+</main>
+
+<dialog id="requestDialog" aria-labelledby="requestTitle">
+    <form id="requestForm">
+        <div class="dialog-header"><div><p class="eyebrow">NEW REQUEST</p><h2 id="requestTitle">Request medicine stock</h2></div><button type="button" class="close" id="closeDialog" aria-label="Close">×</button></div>
+        <label>Requesting facility<input id="requesterName" type="text" readonly></label>
+        <label>Medicine<select id="medicineId" required></select></label>
+        <div class="form-row">
+            <label>Quantity<input id="quantity" type="number" min="1" max="100000" step="1" value="100" required></label>
+            <label>Priority<select id="priority"><option>NORMAL</option><option>HIGH</option><option>CRITICAL</option></select></label>
+        </div>
+        <label>Reason<textarea id="notes" maxlength="500" placeholder="Explain the shortage or demand change"></textarea></label>
+        <div id="sourceSuggestion" class="suggestion">Choose a medicine to see the available safe sources.</div>
+        <div class="dialog-actions"><button type="button" class="secondary" id="cancelDialog">Cancel</button><button type="submit" class="primary">Send request</button></div>
+    </form>
+</dialog>
+
+<dialog id="editDialog" aria-labelledby="editHeading"><form id="editForm"><div class="dialog-header"><h2 id="editHeading">Edit inventory</h2><button class="close" type="button" id="closeEdit" aria-label="Close">×</button></div><p id="editTitle"></p><label>Available quantity<input id="editQuantity" type="number" min="0" max="1000000" required></label><label>Average daily consumption<input id="editConsumption" type="number" min="0" max="100000" step="0.01" required></label><label>Reorder level<input id="editReorder" type="number" min="0" max="1000000" required></label><label>Expiry date<input id="editExpiry" type="date" required></label><div class="dialog-actions"><button class="secondary" type="button" id="cancelEdit">Cancel</button><button class="primary" type="submit">Review changes</button></div></form></dialog>
+<dialog id="actionDialog" class="action-dialog" aria-labelledby="actionTitle" aria-describedby="actionDescription">
+    <form id="actionForm" novalidate>
+        <div class="dialog-header">
+            <div><p class="eyebrow">MEDIHIVE CONFIRMATION</p><h2 id="actionTitle">Confirm action</h2></div>
+            <button type="button" id="closeAction" class="close" aria-label="Close confirmation">×</button>
+        </div>
+        <p id="actionDescription" class="action-description"></p>
+        <dl id="actionDetails" class="action-details"></dl>
+        <label id="actionQuantityLabel" for="actionQuantity" hidden>Quantity
+            <input id="actionQuantity" type="number" min="1" step="1" inputmode="numeric" aria-describedby="actionHint actionError">
+        </label>
+        <p id="actionHint" class="action-hint"></p>
+        <p id="actionError" class="action-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+            <button type="button" id="cancelAction" class="secondary">Cancel</button>
+            <button type="submit" id="confirmAction" class="primary">Confirm</button>
+        </div>
+    </form>
+</dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<footer><span>MediHive prototype</span><span class="fineprint">Designed and developed by <strong>ByteForge</strong> for Manipal Hackathon 2026</span><span>Demo uses fictional facility data</span></footer>
+<script src="app.js?v=3"></script>
+</body>
+</html>
