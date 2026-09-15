@@ -8,8 +8,8 @@ Problem Statement ID: PS02
 
 - Use only the official Round 1 presentation template.
 - Export and submit as PDF, not PPT or PPTX.
-- Replace `TeamID` with the actual Team ID displayed in the portal.
-- Required pattern: `ActualTeamID_ByteForge_PS02.pdf`.
+- The portal identifies ByteForge as team UID `50750`.
+- Required filename: `50750_ByteForge_PS02.pdf`.
 - Do not include the institute name, institute logo, or college-identifying background elements.
 
 ## Video
@@ -41,7 +41,7 @@ Then complete the five-account judge walkthrough in `docs/MediHive-User-Manual.p
 
 ## Portal submission package
 
-- Presentation PDF: `ActualTeamID_ByteForge_PS02.pdf`
+- Presentation PDF: `50750_ByteForge_PS02.pdf`
 - Accessible video URL
 - Public GitHub repository URL
 - Any other mandatory text fields shown by the official portal
