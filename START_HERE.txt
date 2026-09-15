@@ -1,0 +1,66 @@
+MediHive v3 - ByteForge
+
+This ZIP contains the complete updated frontend and Spring Boot backend.
+
+OPEN AND RUN IN SPRING TOOL SUITE
+1. Stop your currently running MediHive application using the red Stop button.
+2. Extract this ZIP into a new folder. Keep your previous project as a backup.
+3. In STS select File > Switch Workspace > Other, and choose a new workspace
+   folder such as Documents/medihive-v3-workspace. This avoids duplicate project names.
+4. Select File > Import > Maven > Existing Maven Projects.
+5. Browse to the extracted MediHive-ByteForge folder containing pom.xml.
+6. Click Finish and let Maven download any required dependencies.
+7. Open src/main/java/com/byteforge/medihive/MediHiveApplication.java.
+8. Right-click > Run As > Spring Boot App.
+9. Wait for the Console to show that MediHive has started.
+10. Open http://localhost:8080/login. Refresh with Ctrl+F5 if old styling appears.
+
+The app requires Java 17 or newer. Its default H2 demo needs no pgAdmin setup.
+HTML, CSS and JavaScript are served by Spring Boot; do not use VS Code Live Server.
+
+DEMO LOGINS (same as your v2 ZIP)
+Warehouse:       warehouse_admin       HiveWH!2026
+Unity Hospital:  unity_admin           UnityH!2026
+City Hospital:   city_hospital_admin   CityH!2026
+CityCare:        citycare_admin        CityCareP!2026
+MediPlus:        mediplus_admin        MediPlusP!2026
+
+CHECK YOUR REQUESTED CHANGES
+- As warehouse_admin, select Central Medical Warehouse: Edit is available.
+- Select a hospital or pharmacy: inventory is view-only and Edit is absent.
+- Save an inventory change: a matching MediHive confirmation dialog appears.
+- On a critical request, Offer stock uses the signed-in admin's own facility.
+- The offer dialog shows its maximum, reserves and projected remaining stock.
+- Save an offer, then approve its quantity and dispatch it from the supplying account.
+- The receiving facility's account confirms delivery.
+
+THE 50 EXTRA UNITS RULE
+Safety reserve = the larger of the reorder level and 5 days of daily consumption.
+A hospital must keep that safety reserve PLUS 50 extra units of that medicine.
+Other approved transfers are subtracted before calculating the maximum offer.
+Example: stock 300, safety reserve 100, other approvals 0 -> maximum offer 150.
+After sending 150, the hospital retains 150 = safety reserve 100 + extra 50.
+This rule is checked again at approval and dispatch; a later stock change can block dispatch.
+Warehouses and pharmacies keep their existing safety reserve rules.
+
+CRITICAL OFFERS
+Pending proposals are possible sources, not confirmed commitments. They can overlap.
+Only approvals reserve stock. Total approvals cannot exceed the requested quantity.
+Updating your offer edits your pending proposal instead of creating a duplicate.
+Your admin still approves the proposed quantity before dispatch.
+
+YOUR EXISTING POSTGRESQL DATABASE
+Use the postgres profile and your own DB_URL, DB_USERNAME and DB_PASSWORD as before.
+See README.md for the exact STS/Maven settings. Do not reset or delete your database.
+Existing hospital stock may be too low under the new rule; then available-to-offer is 0.
+The fresh H2 demo includes enough City Hospital stock for the 40-unit example transfer.
+H2 demo data resets when the app restarts. PostgreSQL data persists.
+
+FILES YOU MAY WANT TO EDIT LATER
+src/main/resources/static/index.html - page and dialogs
+src/main/resources/static/styles.css - colours and design
+src/main/resources/static/app.js - buttons and interactions
+src/main/java/com/byteforge/medihive/service/StockPolicy.java - reserve calculation
+src/main/java/com/byteforge/medihive/service/MediHiveService.java - supply workflow
+
+Validation details and additional instructions are in README.md.
