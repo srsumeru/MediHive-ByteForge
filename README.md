@@ -5,6 +5,73 @@
 
 MediHive is a fictional hackathon prototype for medicine shortage alerts and approved redistribution among five facilities. Java 17, Spring Boot, Maven, JPA, PostgreSQL/H2 and HTML/CSS/vanilla JavaScript run from one server. No patient information is stored.
 
+## Download and run
+
+**[Download MediHive as a ZIP](https://github.com/srsumeru/MediHive-ByteForge/archive/refs/heads/main.zip)**
+
+This link downloads the latest source code from `main`, including the frontend, Spring Boot backend, demo database configuration, tests, user manual, and license. A GitHub account is not required.
+
+### Download instructions
+
+1. Click **Download MediHive as a ZIP** above. Alternatively, click the green **Code** button on this repository and choose **Download ZIP**.
+2. Right-click the downloaded ZIP and choose **Extract All**. Open the extracted `MediHive-ByteForge-main` folder containing `pom.xml`.
+3. Read [START_HERE.txt](START_HERE.txt) and follow one of the run methods below. You do not need to download individual source files.
+
+### Requirements
+
+- JDK **17 or 21**. Check with `java -version`.
+- **Maven 3.9+** for terminal commands. Check with `mvn -version`. Maven must be installed separately; this repository does not include a Maven wrapper.
+- Internet for the initial dependency download.
+- PostgreSQL is optional. The default H2 demo runs without PostgreSQL or pgAdmin and resets its seeded data when the server stops.
+
+### Run in VS Code
+
+1. Install **Extension Pack for Java** and **Spring Boot Extension Pack**.
+2. Select **File > Open Folder** and choose the extracted folder containing `pom.xml`.
+3. Open **Terminal > New Terminal** in that folder and run:
+
+   ```sh
+   mvn spring-boot:run
+   ```
+
+4. Wait for the application to start, then open **http://localhost:8080/login**.
+5. Use one of the [five demo logins](#five-separate-demo-logins) below. Stop the server with **Ctrl+C**.
+
+The Java backend serves the HTML, CSS, and JavaScript. Run the whole Spring Boot application; opening `index.html` directly or using Live Server will not provide the backend APIs.
+
+### Run in Spring Tool Suite / Spring Tools for Eclipse
+
+1. Select **File > Import > Maven > Existing Maven Projects**.
+2. Choose the extracted folder containing `pom.xml` and click **Finish**.
+3. Use JDK 17 or 21 and wait for Maven to resolve dependencies.
+4. Open `src/main/java/com/byteforge/medihive/MediHiveApplication.java`.
+5. Right-click the class and select **Run As > Spring Boot App**.
+6. Open **http://localhost:8080/login** and use a demo login below.
+
+### Build a runnable JAR or run tests
+
+From the folder containing `pom.xml`:
+
+```sh
+mvn test
+mvn clean package
+java -jar target/medihive-1.0.0.jar
+```
+
+The source ZIP requires a JDK and dependency download; it does not contain a prebuilt JAR. If port 8080 is occupied, stop the other server or run `mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8081`, then open http://localhost:8081/login.
+
+### Clone instead of downloading
+
+```sh
+git clone https://github.com/srsumeru/MediHive-ByteForge.git
+cd MediHive-ByteForge
+mvn spring-boot:run
+```
+
+## Open-source license
+
+MediHive is available under the **[MIT License](LICENSE)**. You may use, modify, and redistribute the project, including commercially, provided the copyright and license notice are retained. Third-party dependencies retain their own licenses.
+
 ## Five separate demo logins
 
 | Administrator | Username | Temporary password | Inventory editing |
